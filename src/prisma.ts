@@ -58,15 +58,20 @@ const prisma = new PrismaClient();
 // deleteUser()
 
 //BUSCA O PRIMEIRO REGISTRO COM OS DADOS INSERIDOS NO WHERE
-// async function findFirstUserByName() {
-//     const firstUser = await prisma.user.findFirst({ where: { name: "Vitor Hugo" }});
+async function findFirstUserByName() {
+    const firstUser = await prisma.user.findFirst({ 
+        where: { 
+            name: "Vitor Hugo Alves" 
+        },
+        include: { Address: true }
+    });
 
-//     if(firstUser) console.log("Usuário encontrado:", firstUser)
-//     else console.log("usuário não encontrado")
+    if(firstUser) console.log("Usuário encontrado:", firstUser)
+    else console.log("usuário não encontrado")
 
-// }
+}
 
-// findFirstUserByName()
+findFirstUserByName()
 
 
 //BUSCA O REGISTRO DO USUÁRIO
@@ -78,48 +83,50 @@ const prisma = new PrismaClient();
 
 // getUsers()
 
-async function createUserAndAddress() {
-    const name = "Vitor Hugo Alves"
-    const email = "cebola@email.com"
-    const passwordHash = "jcwqcqown"
-    const dateBirth = "2000-04-23"
-    const phone = "51980560089"
 
-    const street = "João Batista Conzatti"
-    const city = "Eldorado do Sul"
-    const state = "Rio Grande do Sul"
-    const zipCode = "92990-000"
+//USANDO O TRANSACTION
+// async function createUserAndAddress() {
+//     const name = "Vitor Hugo Alves"
+//     const email = "cebola@email.com"
+//     const passwordHash = "jcwqcqown"
+//     const dateBirth = "2000-04-23"
+//     const phone = "51980560089"
 
-    const userExist = await prisma.user.findUnique({ where: { email } });
+//     const street = "João Batista Conzatti"
+//     const city = "Eldorado do Sul"
+//     const state = "Rio Grande do Sul"
+//     const zipCode = "92990-000"
 
-    if(userExist) throw new Error("Usuário já existe")
+//     const userExist = await prisma.user.findUnique({ where: { email } });
 
-    const response = await prisma.$transaction(async(prisma) => {
+//     if(userExist) throw new Error("Usuário já existe")
 
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                passwordHash,
-                dateBirth: new Date(dateBirth),
-                phone
-            },
-        });
+//     const response = await prisma.$transaction(async(prisma) => {
 
-        const address = await prisma.address.create({
-            data: {
-                userId: user.id,
-                street,
-                city,
-                state,
-                zipCode
-            },
-        });
+//         const user = await prisma.user.create({
+//             data: {
+//                 name,
+//                 email,
+//                 passwordHash,
+//                 dateBirth: new Date(dateBirth),
+//                 phone
+//             },
+//         });
 
-        return { user , address }
-    })
+//         const address = await prisma.address.create({
+//             data: {
+//                 userId: user.id,
+//                 street,
+//                 city,
+//                 state,
+//                 zipCode
+//             },
+//         });
 
-    console.log(response)
-}
+//         return { user , address }
+//     })
 
-createUserAndAddress()
+//     console.log(response)
+// }
+
+// createUserAndAddress()
